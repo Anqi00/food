@@ -4,7 +4,6 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
 from PIL import Image
@@ -14,7 +13,6 @@ from model import predict_food
 app = FastAPI(title="Food Calorie Estimator")
 
 BASE = Path(__file__).parent
-app.mount("/static", StaticFiles(directory=BASE / "static"), name="static")
 templates = Jinja2Templates(directory=BASE / "templates")
 
 with open(BASE / "calories_db.json", encoding="utf-8") as f:
