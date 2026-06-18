@@ -19,7 +19,7 @@ pinned: false
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)
-![Gemini](https://img.shields.io/badge/Powered%20by-Gemini%202.0-orange)
+![Qwen-VL](https://img.shields.io/badge/Powered%20by-Qwen--VL-orange)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
@@ -43,8 +43,8 @@ pinned: false
 
 | 模块 | 技术 |
 |------|------|
-| 食物识别 | [Google Gemini 2.0 Flash](https://ai.google.dev/)（多模态视觉模型） |
-| 热量数据 | Gemini 直接估算 + USDA FoodData Central 备用数据 |
+| 食物识别 | [通义千问-VL](https://dashscope.aliyun.com/)（阿里 Qwen-VL 多模态视觉模型） |
+| 热量数据 | Qwen-VL 直接估算 + USDA FoodData Central 备用数据 |
 | 后端 | Python + FastAPI |
 | 前端 | 原生 HTML / CSS / JS |
 | 部署 | Hugging Face Spaces（Docker） |
@@ -70,8 +70,8 @@ source venv/bin/activate      # Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
 
-# 创建 .env 文件，填入你的 Gemini API key（从 aistudio.google.com/apikey 获取）
-echo "GOOGLE_API_KEY=你的key" > .env
+# 创建 .env 文件，填入你的 DashScope API key（从 dashscope.aliyun.com 获取）
+echo "DASHSCOPE_API_KEY=sk-你的key" > .env
 
 uvicorn app:app --reload
 ```
