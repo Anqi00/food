@@ -12,6 +12,8 @@ pinned: false
 
 上传一张食物照片，AI 自动识别食物种类并根据重量估算热量。
 
+**在线体验：[huggingface.co/spaces/alex0027/food-calories](https://huggingface.co/spaces/alex0027/food-calories)**
+
 ![Python](https://img.shields.io/badge/Python-3.10+-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## 效果预览
@@ -26,35 +28,30 @@ pinned: false
 | 热量数据 | USDA FoodData Central，覆盖 101 种食物 |
 | 后端 | Python + FastAPI |
 | 前端 | 原生 HTML/CSS/JS，拖拽上传 |
+| 部署 | Hugging Face Spaces（Docker） |
 
-## 快速开始
+## 在线使用
 
-### 环境要求
+直接访问 [https://huggingface.co/spaces/alex0027/food-calories](https://huggingface.co/spaces/alex0027/food-calories)，无需安装任何环境。
 
-- Python 3.10+
-- 首次运行需下载模型（约 330MB），请确保网络畅通
+> 首次访问冷启动约需 1 分钟（模型加载），之后响应正常。
 
-### 安装
+## 本地运行
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Anqi00/food.git
 cd food
 
 python3 -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
-```
-
-### 启动
-
-```bash
 uvicorn app:app --reload
 ```
 
 打开浏览器访问 [http://localhost:8000](http://localhost:8000)
 
-### 如果下载模型较慢（国内网络）
+国内网络下载模型较慢时：
 
 ```bash
 export HF_ENDPOINT=https://hf-mirror.com
@@ -68,6 +65,7 @@ food/
 ├── app.py              # FastAPI 路由
 ├── model.py            # 模型加载与推理
 ├── calories_db.json    # 热量数据库（101 种食物 + 中文名）
+├── Dockerfile          # 容器化部署配置
 ├── requirements.txt
 └── templates/
     └── index.html      # 前端页面
@@ -76,8 +74,6 @@ food/
 ## API
 
 ### `POST /predict`
-
-识别图片中的食物并返回热量信息。
 
 **请求参数（multipart/form-data）**
 
@@ -112,13 +108,13 @@ food/
 
 完整列表见 `calories_db.json`。
 
-## 热量计算方式
+## 热量计算
 
 ```
 总热量 (kcal) = 食物重量 (g) × 每 100g 热量 (kcal) ÷ 100
 ```
 
-热量数据来源：USDA FoodData Central，为每种食物的典型制作方式参考值，仅供估算。
+数据来源：USDA FoodData Central，为典型制作方式的参考值，仅供估算。
 
 ## License
 
