@@ -1,3 +1,13 @@
+---
+title: 食物热量识别
+emoji: 🍱
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # 🍱 食物热量识别
 
 上传一张食物照片，AI 自动识别食物种类并根据重量估算热量。
