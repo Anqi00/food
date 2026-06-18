@@ -50,6 +50,7 @@ async def predict(
                 "confidence": round(confidence * 100, 1),
                 "calories_per_100g": cal_per_100g,
                 "total_calories": total_calories,
+                "typical_serving_g": info.get("typical_serving_g"),
                 "weight": weight,
             }
         )
