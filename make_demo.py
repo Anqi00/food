@@ -60,11 +60,34 @@ def draw_dropzone_empty(draw, y0=96):
               font=font(11), fill=TEXT_LT, anchor="mm")
 
 
-def draw_dropzone_image(draw, emoji="🍕", y0=96):
+_PHOTO = None
+
+def load_photo():
+    global _PHOTO
+    if _PHOTO is None:
+        path = os.path.join(os.path.dirname(__file__), "demo_photo.jpeg")
+        if os.path.exists(path):
+            img = Image.open(path).convert("RGB")
+            # crop center square then resize to fit
+            w, h = img.size
+            s = min(w, h)
+            img = img.crop(((w-s)//2, (h-s)//2, (w+s)//2, (h+s)//2))
+            _PHOTO = img.resize((188, 154), Image.LANCZOS)
+    return _PHOTO
+
+
+def draw_dropzone_image(draw, canvas, y0=96):
     rr(draw, (34, y0, W-34, y0+190), r=12, fill=BLUE_LT, outline=BLUE, width=2)
-    # fake photo card
-    rr(draw, (160, y0+12, 360, y0+178), r=10, fill=(200, 225, 255))
-    draw.text((260, y0+95), emoji, font=font(56), fill=TEXT_DK, anchor="mm")
+    photo = load_photo()
+    if photo:
+        # paste real photo with rounded mask
+        px, py = (W - 188) // 2, y0 + 18
+        mask = Image.new("L", photo.size, 0)
+        ImageDraw.Draw(mask).rounded_rectangle([0, 0, 188, 154], radius=10, fill=255)
+        canvas.paste(photo, (px, py), mask)
+    else:
+        rr(draw, (160, y0+12, 360, y0+178), r=10, fill=(200, 225, 255))
+        draw.text((260, y0+95), "🍣", font=font(56), fill=TEXT_DK, anchor="mm")
 
 
 # ── weight row ───────────────────────────────────────────────────────────────
@@ -107,11 +130,11 @@ def draw_submit(draw, label="请先选择图片", enabled=True, loading=False, y
 # ── result cards ─────────────────────────────────────────────────────────────
 
 RESULTS_DATA = [
-    ("披萨",     "pizza",         92.3, 266, True),
-    ("炸鱿鱼",   "fried calamari", 4.1, 175, False),
-    ("纳乔斯",   "nachos",         1.8, 346, False),
-    ("洋葱圈",   "onion rings",    0.9, 411, False),
-    ("法式吐司", "french toast",   0.5, 210, False),
+    ("烤鱼",     "grilled salmon",  89.4, 206, True),
+    ("烤三文鱼", "peking duck",      5.2, 338, False),
+    ("西班牙海鲜饭", "paella",       2.7, 179, False),
+    ("炸鱿鱼",   "fried calamari",   1.5, 175, False),
+    ("炸鱼薯条", "fish and chips",   1.2, 265, False),
 ]
 
 
@@ -169,7 +192,7 @@ def scene_selected():
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
     draw_chrome(d)
-    draw_dropzone_image(d, "🍕", y0=96)
+    draw_dropzone_image(d, img, y0=96)
     draw_weight_row(d, weight="100", estimate_enabled=False, y0=300)
     draw_submit(d, label="识别食物 →", enabled=True, y0=348)
     return img
@@ -179,7 +202,7 @@ def scene_loading():
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
     draw_chrome(d)
-    draw_dropzone_image(d, "🍕", y0=96)
+    draw_dropzone_image(d, img, y0=96)
     draw_weight_row(d, weight="100", estimate_enabled=False, y0=300)
     draw_submit(d, enabled=True, loading=True, y0=348)
     return img
@@ -189,9 +212,9 @@ def scene_results(weight=100):
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
     draw_chrome(d)
-    draw_dropzone_image(d, "🍕", y0=96)
+    draw_dropzone_image(d, img, y0=96)
     draw_weight_row(d, weight=str(weight), estimate_enabled=True,
-                    hint="披萨 典型份量约 200g（参考值）", y0=300)
+                    hint="烤鱼 典型份量约 500g（参考值）", y0=300)
     draw_submit(d, label="重新识别 →", enabled=True, y0=352)
     draw_results(d, weight=weight, y0=402)
     return img
@@ -209,12 +232,11 @@ def scene_estimate_click():
 
 
 def scene_estimated():
-    """Weight filled in as 200g, results updated."""
-    img = scene_results(weight=200)
-    # subtle green flash on weight field
+    """Weight filled in as 500g, results updated."""
+    img = scene_results(weight=500)
     d = ImageDraw.Draw(img)
     rr(d, (128, 304, 310, 326), r=7, fill=(230, 255, 235), outline=GREEN, width=2)
-    d.text((140, 315), "200", font=font(13, True), fill=GREEN, anchor="lm")
+    d.text((140, 315), "500", font=font(13, True), fill=GREEN, anchor="lm")
     return img
 
 

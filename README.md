@@ -10,8 +10,8 @@ pinned: false
 
 # 🍱 食物热量识别 | Food Calorie Estimator
 
-> 上传一张食物照片，AI 自动识别食物种类并估算热量。
-> Upload a food photo — AI identifies the dish and estimates its calories.
+> 上传一张食物照片，AI 自动识别食物种类并估算热量。支持中西餐任意食物。
+> Upload a food photo — AI identifies the dish and estimates its calories. Works for any food worldwide.
 
 **在线体验 / Live Demo：[huggingface.co/spaces/alex0027/food-calories](https://huggingface.co/spaces/alex0027/food-calories)**
 
@@ -19,6 +19,7 @@ pinned: false
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)
+![Gemini](https://img.shields.io/badge/Powered%20by-Gemini%202.0-orange)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
@@ -31,7 +32,7 @@ pinned: false
 
 ## 功能
 
-- **食物识别**：基于 ViT 视觉模型，支持 101 种常见食物
+- **任意食物识别**：基于 Google Gemini 视觉模型，支持中西餐所有食物，包括烤鱼、麻辣烫、寿司、披萨等
 - **热量估算**：识别后输入克重，自动计算总热量
 - **估计重量**：不知道重量？点击「估计重量」按钮，自动填入该食物的典型份量
 - **拖拽上传**：支持拖拽或点击上传 JPG / PNG / WEBP
@@ -42,8 +43,8 @@ pinned: false
 
 | 模块 | 技术 |
 |------|------|
-| 食物识别 | [nateraw/food](https://huggingface.co/nateraw/food)（ViT-base，Food-101 微调） |
-| 热量数据 | USDA FoodData Central，覆盖 101 种食物 |
+| 食物识别 | [Google Gemini 2.0 Flash](https://ai.google.dev/)（多模态视觉模型） |
+| 热量数据 | Gemini 直接估算 + USDA FoodData Central 备用数据 |
 | 后端 | Python + FastAPI |
 | 前端 | 原生 HTML / CSS / JS |
 | 部署 | Hugging Face Spaces（Docker） |
@@ -54,7 +55,7 @@ pinned: false
 
 直接访问 👉 **[https://huggingface.co/spaces/alex0027/food-calories](https://huggingface.co/spaces/alex0027/food-calories)**
 
-无需安装，打开即用。首次访问冷启动约 1 分钟（模型加载）。
+无需安装，打开即用。
 
 ---
 
@@ -68,15 +69,14 @@ python3 -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
+
+# 创建 .env 文件，填入你的 Gemini API key（从 aistudio.google.com/apikey 获取）
+echo "GOOGLE_API_KEY=你的key" > .env
+
 uvicorn app:app --reload
 ```
 
 打开 [http://localhost:8000](http://localhost:8000)
-
-> 国内网络下载模型较慢时，先执行：
-> ```bash
-> export HF_ENDPOINT=https://hf-mirror.com
-> ```
 
 ---
 
@@ -85,8 +85,8 @@ uvicorn app:app --reload
 ```
 food/
 ├── app.py              # FastAPI 路由
-├── model.py            # 模型加载与推理
-├── calories_db.json    # 热量数据库（101 种食物 + 中文名 + 典型份量）
+├── model.py            # Gemini 视觉识别
+├── calories_db.json    # 热量备用数据库（101 种食物）
 ├── Dockerfile
 ├── requirements.txt
 └── templates/
@@ -101,7 +101,7 @@ food/
 总热量 (kcal) = 食物重量 (g) × 每 100g 热量 (kcal) ÷ 100
 ```
 
-热量数据来源：USDA FoodData Central，为典型制作方式参考值，仅供估算。
+热量数据由 Gemini 估算，参考 USDA FoodData Central，仅供参考。
 
 ---
 
