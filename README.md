@@ -32,7 +32,7 @@ pinned: false
 
 ## 功能
 
-- **任意食物识别**：基于 Google Gemini 视觉模型，支持中西餐所有食物，包括烤鱼、麻辣烫、寿司、披萨等
+- **任意食物识别**：基于通义千问-VL 视觉模型，支持中西餐所有食物，包括烤鱼、麻辣烫、寿司、披萨等
 - **热量估算**：识别后输入克重，自动计算总热量
 - **估计重量**：不知道重量？点击「估计重量」按钮，自动填入该食物的典型份量
 - **拖拽上传**：支持拖拽或点击上传 JPG / PNG / WEBP
@@ -85,7 +85,7 @@ uvicorn app:app --reload
 ```
 food/
 ├── app.py              # FastAPI 路由
-├── model.py            # Gemini 视觉识别
+├── model.py            # Qwen-VL 视觉识别
 ├── calories_db.json    # 热量备用数据库（101 种食物）
 ├── Dockerfile
 ├── requirements.txt
@@ -101,7 +101,7 @@ food/
 总热量 (kcal) = 食物重量 (g) × 每 100g 热量 (kcal) ÷ 100
 ```
 
-热量数据由 Gemini 估算，参考 USDA FoodData Central，仅供参考。
+热量数据由 Qwen-VL 估算，参考 USDA FoodData Central，仅供参考。
 
 ---
 
