@@ -26,7 +26,7 @@ pinned: false
 
 ## 效果预览
 
-![demo](demo.gif)
+![demo](https://raw.githubusercontent.com/Anqi00/food/main/demo.gif)
 
 ---
 
